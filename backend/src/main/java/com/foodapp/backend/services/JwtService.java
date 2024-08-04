@@ -2,8 +2,6 @@ package com.foodapp.backend.services;
 
 import com.foodapp.backend.models.User;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -50,7 +48,7 @@ public class JwtService {
      */
     private Claims getClaimsFromToken(String token) {
         return Jwts.parser()
-                .verifyWith(SECRET_KEY)
+                .verifyWith(getSignKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
