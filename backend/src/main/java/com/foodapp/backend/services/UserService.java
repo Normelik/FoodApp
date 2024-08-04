@@ -2,9 +2,7 @@ package com.foodapp.backend.services;
 
 import com.foodapp.backend.DTOs.RequestUserDto;
 import com.foodapp.backend.DTOs.ResponseUserDTO;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
