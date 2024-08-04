@@ -1,6 +1,9 @@
 package com.foodapp.backend.services;
 
 import com.foodapp.backend.models.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
@@ -28,5 +32,27 @@ public class JwtService {
     private SecretKey getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        Claims claims = getClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    /**
+     * Extract all claims from token (subject, issuedAt, expiration ...)
+     * @param token
+     * @return
+     */
+    private Claims getClaimsFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith(SECRET_KEY)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
